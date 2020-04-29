@@ -153,8 +153,23 @@ def document_identification(response):
                     isDocument = True
                     cedula.append(item['Text'])
                 if isDocument:
-                    cedula.append(item['Text'])
-                    print(item['Text'])
+                    if item['Text'].isupper():
+                        cedula.append(item['Text'])
+                        # print(item['Text'])
+                    else:
+                        try:
+                            val = float(item['Text'])
+                            # print("Input is an float number. Number = ", val)
+                            cedula.append(val)
+                        except ValueError:
+                            try:
+                                val = int(item['Text'].replace('.', ''))
+                                cedula.append(val)
+                                # print("str is replace= ", val)
+                                # print(type(val))
+                            except ValueError:
+                                # print("No.. input is not a number. It's a string")
+                                 print("NO ESTA EN MAYUSCULA: " + item['Text'])
                     if item['Text'] == end_line_document_1 or item['Text'] == end_line_document_2:
                         isDocument = False
                         print("---------------------")
@@ -174,6 +189,7 @@ def analize_document(s3BucketName, documentName):
         response = getJobResults(jobId)
         print("TOTAL DE PAGINAS: {}".format(len(response)))
         doucumentos = document_identification(response)
+        print(doucumentos)
         #for cedula in doucumentos:
             #print(*cedula)
             #print("-------------------------")
